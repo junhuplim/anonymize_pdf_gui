@@ -29,3 +29,31 @@ def anonymize(folder_dir, new=True):
                     page.Resources.XObject[image_name] = new_image
 
             pdf.save(dest_path)
+            
+def main():
+    layout = [
+            [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
+                sg.InputText('Choose a Folder'), sg.FolderBrowse()],
+            [sg.Checkbox('New Software PDF', default=True), sg.Checkbox('Old Software PDF')],
+            [sg.Button('Submit'), sg.Button('Exit')]
+            ]
+
+    window = sg.Window('Anonymize PDF', layout)
+    while True:             
+        event, values = window.read()
+        if event == sg.WIN_CLOSED or event == 'Exit':
+            break
+
+        if event == 'Submit':
+            if not values['Browse']:
+                sg.Popup('Provide your directory folder of PDFs!')
+            elif (values[1] is False and values[2] is False) or (values[1] is True and values[2] is True):
+                sg.Popup('Tick one check box accordingly!')
+            else:
+                anonymize(values[0], values[1])
+                window.close()
+
+    window.close()
+
+if __name__ == '__main__':
+    main()
